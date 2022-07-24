@@ -1,4 +1,4 @@
-package net.pilseong.demo;
+package net.pilseong.demo.webserver;
 
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;

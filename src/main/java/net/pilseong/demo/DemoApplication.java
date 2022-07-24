@@ -13,7 +13,8 @@ public class DemoApplication {
 	private OrderManager orderManager;
 	private WebServer webServer;
 
-	public DemoApplication(OrderManager orderManager, WebServer webServer) {
+	public DemoApplication(OrderManager orderManager, 
+		WebServer webServer) {
 		this.orderManager = orderManager;
 		this.webServer = webServer;
 	}
@@ -21,7 +22,8 @@ public class DemoApplication {
 	public void start() {
 
 		Thread orderManagerThread = new Thread(orderManager);
-		orderManagerThread.setName("Kitchen Manager");
+
+		orderManagerThread.setName("Order Manager");
 		orderManagerThread.start();
 
 		this.webServer.start();

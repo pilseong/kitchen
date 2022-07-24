@@ -1,4 +1,4 @@
-package net.pilseong.demo;
+package net.pilseong.demo.webserver;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -36,7 +36,7 @@ public abstract class OrderHandler implements HttpHandler {
     String content = "";
 
     // logging out to the console with URI info
-    System.out.println(String.format("Method: %s, path: %s", method, path));
+    // System.out.println(String.format("Method: %s, path: %s", method, path));
 
     // get the body from the request
     String body = this.getBody(exchange.getRequestBody());
@@ -58,10 +58,10 @@ public abstract class OrderHandler implements HttpHandler {
       System.out.println("foramt error");
     }
     // we deal with GET here only
-    if (method.equals("GET") && path.equals("/order")) {
+    if (method.equals("POST") && path.equals("/order")) {
       this.get(order, exchange);
     } else {
-      content = "Only GET method is supported";
+      content = "Only POST method is supported";
       exchange.sendResponseHeaders(404, content.getBytes().length);
       OutputStream outputStream = exchange.getResponseBody();
       outputStream.write(content.getBytes());
