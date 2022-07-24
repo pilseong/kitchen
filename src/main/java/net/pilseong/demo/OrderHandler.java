@@ -15,6 +15,8 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
+import net.pilseong.demo.entity.Order;
+
 public abstract class OrderHandler implements HttpHandler {
   private ObjectMapper objectMapper = new ObjectMapper();
   // private List<Order> orders = new ArrayList<>();

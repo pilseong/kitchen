@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import com.sun.net.httpserver.HttpExchange;
 
-@Component
+import net.pilseong.demo.entity.Order;
+
 public class OrderController extends OrderHandler {
 
   @Autowired

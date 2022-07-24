@@ -1,4 +1,4 @@
-package net.pilseong.demo;
+package net.pilseong.demo.entity;
 
 import java.util.UUID;
 
