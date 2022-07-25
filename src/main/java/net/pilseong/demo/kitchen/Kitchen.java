@@ -14,7 +14,7 @@ public class Kitchen extends Thread {
   @Override
   public void run() {
     System.out.println(
-        String.format("[Kitchen %s] KITCHEN GOT %s COOK %d secs",
+        String.format("[Kitchen %s] KITCHEN RECEIVED ORDER %s COOKING %d secs",
             currentThread().getName(), order.getName(), order.getPrepTime()));
 
     try {

@@ -58,8 +58,8 @@ public class OrderStatus implements Subject{
   @Override
   public void registerObserver(Observer observer) { }
 
-  // matched -> only one courier is waiting for this order
-  // FIFO ->  
+  // reuse of Subject interface
+  // let the courier related to this order that the food is ready
   @Override
   public void notifyObservers(Order order) {
     this.finished = true;

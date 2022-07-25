@@ -35,19 +35,31 @@ public class OrderBoardManager {
   public synchronized void setKitchen(Order order, Kitchen kitchen) {
     this.orderBoard.get(order.getId()).setKitchen(kitchen);  
   }
+
+  public synchronized void registerOrder(Order order) {
+    this.orderBoard.put(order.getId(), 
+      new OrderStatus(order, false));
+  }
   
+
+  // only used for FIFO strategy
   public synchronized Order retrieveWaitingOrder(Observer courier) {
+    
+    // there is only one order ready to be delivered
     if (this.readyFoodQueue.size() == 1) {
       Order order =  this.readyFoodQueue.get(0).getOrder();
       this.readyFoodQueue.get(0).setCourier(courier);
       this.readyFoodQueue.remove(0);
       return order;
+    // more than one orders waiting for couriers
     } else if (this.readyFoodQueue.size() > 1) {
       int index = (int) Math.random() * this.readyFoodQueue.size();
       Order order = this.readyFoodQueue.get(index).getOrder();
       this.readyFoodQueue.get(index).setCourier(courier);
       this.readyFoodQueue.remove(index);
       return order;
+    // courier arrived too early, 
+    // then just added to the waiting courier queue for subscription
     } else {
       this.waitingCouriers.add(courier);
       return null;
@@ -57,5 +69,9 @@ public class OrderBoardManager {
   // couier delette order status
   public synchronized void deleteOrder(UUID uuid) {
     this.orderBoard.remove(uuid);
+  }
+
+  public int size() {
+    return this.orderBoard.size();
   }
 }

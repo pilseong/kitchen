@@ -12,8 +12,6 @@ public class MatchedCourierManager implements CourierManager {
   @Autowired
   private Map<UUID, OrderStatus> orderBoard;
   
-  // private Map<UUID, Courier> couriers = new HashMap<>();
-
   public void update(Order order) {
     System.out.println(String.format("%s says order %s has been received", 
       "CourierManager", order.getName()));

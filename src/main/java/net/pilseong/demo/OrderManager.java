@@ -1,7 +1,5 @@
 package net.pilseong.demo;
 
-import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,26 +19,27 @@ public class OrderManager implements Runnable {
   private KitchenManager kitchenManager;
 
   @Autowired
-  Map<UUID, OrderStatus> orderBoard;
+  private OrderBoardManager orderBoardManager;
 
   @Override
   public void run() {
     System.out.println("OrderManager thread is up and running");
     while (true) {
       try {
+        // register order to the status board
         Order order = this.incommingOrderQueue.take();
+        this.orderBoardManager.registerOrder(order);
 
-        OrderStatus orderStatus = new OrderStatus(order, false);
-        this.orderBoard.put(order.getId(), orderStatus);
-        
         System.out.println("Order Manager fetched the order " + order.toString());
         
+        // I didn't use Subject / Observer here
+        // because it is a too small project.
         courierManager.update(order);
         kitchenManager.update(order);
 
 
-        // I make a limit of the processing rates here
-        // 2 requests per sec
+        // 1. backpressure
+        // 2. requests per sec
         Thread.sleep(500); 
 
       } catch (InterruptedException e) {
