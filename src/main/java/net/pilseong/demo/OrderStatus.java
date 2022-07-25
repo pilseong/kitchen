@@ -1,6 +1,6 @@
 package net.pilseong.demo;
 
-import net.pilseong.demo.courier.Courier;
+import net.pilseong.demo.courier.MatchedCourier;
 import net.pilseong.demo.entity.Order;
 import net.pilseong.demo.kitchen.Kitchen;
 
@@ -11,7 +11,7 @@ public class OrderStatus implements Subject{
   private boolean finished;
 
   public OrderStatus(Order order, Kitchen kitchen, 
-    Courier courier, boolean finished) {
+    MatchedCourier courier, boolean finished) {
     this.order = order;
     this.kitchen = kitchen;
     this.courier = courier;
@@ -58,11 +58,14 @@ public class OrderStatus implements Subject{
   @Override
   public void registerObserver(Observer observer) { }
 
+  // matched -> only one courier is waiting for this order
+  // FIFO ->  
   @Override
   public void notifyObservers(Order order) {
     this.finished = true;
-    if (this.courier != null)
+    if (this.courier != null) {
       this.courier.update(order);
+    }
   }
 
   public Order getOrder() {

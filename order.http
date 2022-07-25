@@ -2,17 +2,24 @@
 POST http://localhost:9900/order HTTP/1.1
 Content-Type: application/json
 
-{
-  "id": "0ff534a7-a7c4-48ad-b6ec-7632e36af950",
-  "name": "Cheese Pizza",
-  "prepTime": 13
-}
+[
+  {
+    "id": "0nn534a7-a7c4-48ad-b6ec-7632e36af950",
+    "name": "Doggie Soup",
+    "prepTime": 5
+  },
+  {
+    "id": "0ff534a7-a7c4-48ad-b6ec-7632e36af950",
+    "name": "Cheese Pizza",
+    "prepTime": 13
+  }
+]
 
 ### test request without body
 GET http://localhost:9900/order HTTP/1.1
 
 ### test request
-POSt http://localhost:9900/order HTTP/1.1
+POST http://localhost:9900/order HTTP/1.1
 Content-Type: application/json
 
 {

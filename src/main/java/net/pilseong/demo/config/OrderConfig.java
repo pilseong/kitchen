@@ -12,6 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import net.pilseong.demo.OrderBoardManager;
 import net.pilseong.demo.OrderManager;
 import net.pilseong.demo.OrderStatus;
 import net.pilseong.demo.courier.CourierManager;
@@ -23,6 +24,11 @@ import net.pilseong.demo.webserver.WebServer;
 
 @Configuration
 public class OrderConfig {
+  
+  @Bean
+  public OrderBoardManager orderBoardManager() {
+    return new OrderBoardManager();
+  }
   
   @Bean
   public BlockingQueue<Order> incommingOrderQueue() {
@@ -49,11 +55,11 @@ public class OrderConfig {
   public KitchenManager kitchenManager() {
     return new KitchenManager();
   }
-
-  // @Bean
-  // public CourierManager matchedCourierManager() {
-  //   return new MatchedCourierManager();
-  // }
+//
+//   @Bean
+//   public CourierManager matchedCourierManager() {
+//     return new MatchedCourierManager();
+//   }
 
   @Bean
   public CourierManager fIFOCourierManager() {

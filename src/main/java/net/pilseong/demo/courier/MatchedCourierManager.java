@@ -19,7 +19,7 @@ public class MatchedCourierManager implements CourierManager {
       "CourierManager", order.getName()));
 
     // dispatching order to a courier
-    Courier courier = new Courier(this, order);
+    MatchedCourier courier = new MatchedCourier(this, order);
     // FIFOCourier courier = new FIFOCourier(this, order);
     this.orderBoard.get(order.getId()).setCourier(courier);
     courier.start();

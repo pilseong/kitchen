@@ -3,7 +3,7 @@ package net.pilseong.demo.courier;
 import net.pilseong.demo.Observer;
 import net.pilseong.demo.entity.Order;
 
-public class Courier extends Thread implements Observer {
+public class MatchedCourier extends Thread implements Observer {
   private CourierManager courierManager;
 
   private Order order;
@@ -11,7 +11,7 @@ public class Courier extends Thread implements Observer {
   private boolean hasArrived;
 
   
-  public Courier(CourierManager courierManager, Order order) {
+  public MatchedCourier(CourierManager courierManager, Order order) {
     this.courierManager = courierManager;
     this.order = order;
     this.hasNoti = false;
@@ -23,7 +23,7 @@ public class Courier extends Thread implements Observer {
     int second = (int) ((Math.random() * (18 - 3)) + 3) + 1;
 
     System.out.println(
-      String.format("[Courier %s] COURIER FETCH %s TAKE %d secs", 
+      String.format("[COURIER %s] COURIER FETCH %s TAKE %d secs", 
       currentThread().getName() , order.getName(), second));
 
     try {
@@ -31,7 +31,7 @@ public class Courier extends Thread implements Observer {
       this.hasArrived = true;
 
       System.out.println(
-        String.format("[Courier %s] COURIER ARRIVED %s", 
+        String.format("[COURIER %s] COURIER ARRIVED %s", 
         currentThread().getName(), order.getName()));
 
     } catch (InterruptedException e) {
@@ -40,7 +40,7 @@ public class Courier extends Thread implements Observer {
 
     while (!this.hasNoti) {
       System.out.println(
-        String.format("[Courier %s] COURIER WAITING %s", 
+        String.format("[COURIER %s] COURIER WAITING %s", 
         currentThread().getName(), order.getName()));      
       try {
         Thread.sleep(100000);
@@ -50,7 +50,7 @@ public class Courier extends Thread implements Observer {
     }
 
     System.out.println(
-      String.format("[Courier %s] COURIER ENDED %s", 
+      String.format("[COURIER %s] COURIER ENDED %s", 
       currentThread().getName(), order.getName()));
     
     this.courierManager.deleteOrder(order.getId());
@@ -61,7 +61,7 @@ public class Courier extends Thread implements Observer {
     this.hasNoti = true;
 
     System.out.println(
-      String.format("[Courier %s] COURIER NOTIFIED Ready %s", 
+      String.format("[KITCHEN %s] KITCHEN NOTIFIED Ready %s", 
       currentThread().getName(), order.getName()));
 
     if (this.hasArrived) {
