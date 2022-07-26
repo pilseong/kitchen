@@ -16,7 +16,7 @@ import net.pilseong.demo.entity.Order;
 import net.pilseong.demo.kitchen.KitchenManager;
 
 @SpringBootTest
-public class OrderManagerTest {
+public class OrderDispatcherTest {
   
   @MockBean
   private BlockingQueue<Order> incommingOrderQueue;
@@ -31,15 +31,14 @@ public class OrderManagerTest {
   private OrderBoardManager orderBoardManager;
 
   @Autowired
-  OrderManager orderManager;
+  OrderDispatcher orderDisOrderDispatcher;
 
   @Test
   void testRun() throws InterruptedException {
 
     when(incommingOrderQueue.take()).thenReturn(getOrder());
-    when(orderBoardManager.registerOrder(getOrder()));
 
-    Thread thread = new Thread(this.orderManager);
+    Thread thread = new Thread(this.orderDisOrderDispatcher);
     thread.setName("test");
     thread.start();
 
@@ -47,8 +46,6 @@ public class OrderManagerTest {
     thread.interrupt();
 
     assertThat(this.orderBoardManager.size()).isEqualTo(1);
-    
-    
   }
 
   private Order getOrder() {

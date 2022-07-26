@@ -3,12 +3,15 @@ package net.pilseong.demo.courier;
 import net.pilseong.demo.Observer;
 import net.pilseong.demo.entity.Order;
 
-public class MatchedCourier extends Thread implements Observer {
+public class MatchedCourier extends Thread implements Observer, Courier {
   private CourierManager courierManager;
 
   private Order order;
   private boolean hasNoti;
   private boolean hasArrived;
+
+  // measure how much time the courier had waited
+  private Long waitTime;
 
   
   public MatchedCourier(CourierManager courierManager, Order order) {
@@ -20,6 +23,7 @@ public class MatchedCourier extends Thread implements Observer {
 
   @Override
   public void run() {
+    // courier takes random number of seconds to get the kitchen (3 to 18 secs)
     int second = (int) ((Math.random() * (18 - 3)) + 3) + 1;
 
     System.out.println(
@@ -29,6 +33,9 @@ public class MatchedCourier extends Thread implements Observer {
     try {
       Thread.sleep(second * 1000);
       this.hasArrived = true;
+
+      // arrived at the kitchen      
+      this.waitTime = System.currentTimeMillis();
 
       System.out.println(
         String.format("[COURIER %s] COURIER ARRIVED %s", 
@@ -56,6 +63,7 @@ public class MatchedCourier extends Thread implements Observer {
     this.courierManager.deleteOrder(order.getId());
   }
 
+  // update by kitchen thread that food is ready
   @Override
   public void update(Order order) {
     this.hasNoti = true;
@@ -68,7 +76,10 @@ public class MatchedCourier extends Thread implements Observer {
       this.interrupt();
       return;
     }
+  }
 
-    
+  @Override
+  public Long getWaitingTime() {
+    return System.currentTimeMillis() - this.waitTime;
   }
 }

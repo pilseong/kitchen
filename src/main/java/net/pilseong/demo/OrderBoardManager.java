@@ -5,19 +5,33 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import net.pilseong.demo.courier.Courier;
 import net.pilseong.demo.entity.Order;
 import net.pilseong.demo.kitchen.Kitchen;
 
+@Component
 public class OrderBoardManager {
-  @Autowired
-  private Map<UUID, OrderStatus> orderBoard;
-
-  @Autowired
-  private List<OrderStatus> readyFoodQueue;
+  private final Map<UUID, OrderStatus> orderBoard;
+  private final List<OrderStatus> readyFoodQueue;
   
   private List<Observer> waitingCouriers = new ArrayList<>();
+
+  private final List<Long> courierWaitingStat;
+  private final List<Long> foodWaitingStat;
+
+  public OrderBoardManager(
+    Map<UUID, OrderStatus> orderBoard,
+    List<OrderStatus> readyFoodQueue,
+    List<Long> courierWaitingStat,
+    List<Long> foodWaitingStat) {
+
+      this.orderBoard = orderBoard;
+      this.readyFoodQueue = readyFoodQueue;
+      this.courierWaitingStat = courierWaitingStat;
+      this.foodWaitingStat = foodWaitingStat;
+    }
   
   public synchronized void updateFoodStatus(Order order) {
     if (this.orderBoard.containsKey(order.getId())) {
@@ -27,6 +41,7 @@ public class OrderBoardManager {
       if (orderStatus.getCourier() == null && this.waitingCouriers.size() > 0) {
         orderStatus.setCourier(this.waitingCouriers.get(0));
         this.waitingCouriers.remove(0);
+        this.readyFoodQueue.remove(orderStatus);
       }
       orderStatus.notifyObservers(order);
     }
@@ -34,6 +49,10 @@ public class OrderBoardManager {
   
   public synchronized void setKitchen(Order order, Kitchen kitchen) {
     this.orderBoard.get(order.getId()).setKitchen(kitchen);  
+  }
+
+  public synchronized void setCourier(Observer courier, Order order) {
+    this.orderBoard.get(order.getId()).setCourier(courier);
   }
 
   public synchronized void registerOrder(Order order) {
@@ -68,6 +87,11 @@ public class OrderBoardManager {
   
   // couier delette order status
   public synchronized void deleteOrder(UUID uuid) {
+    Long foodWaitingTime = this.orderBoard.get(uuid).getKitchen().getWaitingTime();
+    Long courierWaitingTime = ((Courier)this.orderBoard.get(uuid).getCourier()).getWaitingTime();
+
+    this.foodWaitingStat.add(foodWaitingTime);
+    this.courierWaitingStat.add(courierWaitingTime);
     this.orderBoard.remove(uuid);
   }
 

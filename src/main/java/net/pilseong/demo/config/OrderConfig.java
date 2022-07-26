@@ -12,11 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import net.pilseong.demo.OrderBoardManager;
-import net.pilseong.demo.OrderManager;
 import net.pilseong.demo.OrderStatus;
-import net.pilseong.demo.courier.CourierManager;
-import net.pilseong.demo.courier.FIFOCourierManager;
 import net.pilseong.demo.entity.Order;
 import net.pilseong.demo.kitchen.KitchenManager;
 import net.pilseong.demo.webserver.OrderController;
@@ -24,11 +20,6 @@ import net.pilseong.demo.webserver.WebServer;
 
 @Configuration
 public class OrderConfig {
-  
-  @Bean
-  public OrderBoardManager orderBoardManager() {
-    return new OrderBoardManager();
-  }
   
   @Bean
   public BlockingQueue<Order> incommingOrderQueue() {
@@ -45,27 +36,21 @@ public class OrderConfig {
     return Collections.synchronizedList(new ArrayList<>());
   }
 
+  @Bean
+  public List<Long> courierWaitingStat() {
+    return Collections.synchronizedList(new ArrayList<>());
+  }
 
   @Bean
-  public OrderManager orderManager() {
-    return new OrderManager();
+  public List<Long> foodWaitingStat() {
+    return Collections.synchronizedList(new ArrayList<>());
   }
+
 
   @Bean
   public KitchenManager kitchenManager() {
     return new KitchenManager();
   }
-//
-//   @Bean
-//   public CourierManager matchedCourierManager() {
-//     return new MatchedCourierManager();
-//   }
-
-  @Bean
-  public CourierManager fIFOCourierManager() {
-    return new FIFOCourierManager();
-  }
-  
 
   @Bean
   public OrderController orderController() {

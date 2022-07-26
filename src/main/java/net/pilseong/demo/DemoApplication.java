@@ -10,21 +10,21 @@ import net.pilseong.demo.webserver.WebServer;
 @SpringBootApplication
 public class DemoApplication {
 	
-	private OrderManager orderManager;
+	private OrderDispatcher orderDispatcher;
 	private WebServer webServer;
 
-	public DemoApplication(OrderManager orderManager, 
+	public DemoApplication(OrderDispatcher orderDispatcher, 
 		WebServer webServer) {
-		this.orderManager = orderManager;
+		this.orderDispatcher = orderDispatcher;
 		this.webServer = webServer;
 	}
 	
 	public void start() {
 
-		Thread orderManagerThread = new Thread(orderManager);
+		Thread orderDispatcherThread = new Thread(orderDispatcher);
 
-		orderManagerThread.setName("Order Manager");
-		orderManagerThread.start();
+		orderDispatcherThread.setName("Order Manager");
+		orderDispatcherThread.start();
 
 		this.webServer.start();
 	}
