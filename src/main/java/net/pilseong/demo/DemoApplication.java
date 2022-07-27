@@ -1,9 +1,7 @@
 package net.pilseong.demo;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import net.pilseong.demo.webserver.WebServer;
 
@@ -17,6 +15,8 @@ public class DemoApplication {
 		WebServer webServer) {
 		this.orderDispatcher = orderDispatcher;
 		this.webServer = webServer;
+		
+		this.start();
 	}
 	
 	public void start() {
@@ -30,9 +30,13 @@ public class DemoApplication {
 	}
 
 	public static void main(String[] args) {
-		ApplicationContext ctx = new AnnotationConfigApplicationContext(DemoApplication.class);
-		DemoApplication demoApplication = (DemoApplication) ctx.getBean("demoApplication");
-		demoApplication.start();
-		((ConfigurableApplicationContext)ctx).close();
+	  SpringApplication.run(DemoApplication.class, args);
+	  
+	  
+//	  for legacy spring prject settigs
+//		ApplicationContext ctx = new AnnotationConfigApplicationContext(DemoApplication.class);
+//		DemoApplication demoApplication = (DemoApplication) ctx.getBean("demoApplication");
+//		demoApplication.start();
+//		((ConfigurableApplicationContext)ctx).close();
 	}
 }

@@ -19,14 +19,19 @@ import com.sun.net.httpserver.HttpHandler;
 
 import net.pilseong.demo.entity.Order;
 
+// implements HttpHandler for JSON support and only for Order processing
+// not optimal solution but I just made it up and running.
 public abstract class OrderHandler implements HttpHandler {
   private ObjectMapper objectMapper = new ObjectMapper();
   private HttpExchange exchange;
 
+  // handler for POST and process only for one order
   public abstract void get(Order order, HttpExchange exchange) throws IOException;
   
+  // handler for POST and process a bunch of orders inside a(one) request
   public abstract void get(List<Order> orders, HttpExchange exchange) throws IOException;
 
+  // Overriding handler method 
   @Override
   public void handle(HttpExchange exchange) throws IOException {
 
@@ -85,6 +90,7 @@ public abstract class OrderHandler implements HttpHandler {
     }
   }
 
+  // simple response
   protected void send(int status, String content) throws IOException {
       Headers responseHeaders = exchange.getResponseHeaders();
       responseHeaders.set("Content-Type", "text/html");
@@ -94,21 +100,31 @@ public abstract class OrderHandler implements HttpHandler {
       exchange.getResponseBody().close();
   }
 
+  // Fetching HTTP Request body
   protected String getBody(InputStream inputStream) {
     return new BufferedReader(new InputStreamReader(inputStream))
         .lines()
         .collect(Collectors.joining("\n"));
   }
 
+  // JSON to String
   protected Order toOrder(String content) throws JsonProcessingException {
     return objectMapper.readValue(content, Order.class);
   }
   
+  // String to JSON
   protected List<Order> toOrders(String content) throws JsonProcessingException {
     Order[] orders =  objectMapper.readValue(content, Order[].class);
     return Arrays.asList(orders); 
   }
+  
+  // String to JSON List -> many order in one request
+  protected String ordersToJSON(List<Order> orders) throws IOException {
+    OutputStream outputStream = new ByteArrayOutputStream();
+    objectMapper.writeValue(outputStream, orders);
 
+    return outputStream.toString();
+  }
 
   // printing to JSON data to the console
   protected String orderToJSON(Order order) throws IOException {
@@ -117,12 +133,4 @@ public abstract class OrderHandler implements HttpHandler {
 
     return outputStream.toString();
   }
-  
-  protected String ordersToJSON(List<Order> orders) throws IOException {
-    OutputStream outputStream = new ByteArrayOutputStream();
-    objectMapper.writeValue(outputStream, orders);
-
-    return outputStream.toString();
-  }
-
 }

@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.sun.net.httpserver.HttpExchange;
 
 import net.pilseong.demo.entity.Order;
 
+@Component
 public class OrderController extends OrderHandler {
 
   @Autowired

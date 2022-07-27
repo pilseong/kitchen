@@ -28,7 +28,7 @@ public class OrderDispatcherTest {
   private KitchenManager kitchenManager;
 
   @MockBean
-  private OrderBoardManager orderBoardManager;
+  private OrderManager orderBoardManager;
 
   @Autowired
   OrderDispatcher orderDisOrderDispatcher;

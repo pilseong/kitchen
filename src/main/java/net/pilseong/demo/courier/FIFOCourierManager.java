@@ -2,28 +2,38 @@ package net.pilseong.demo.courier;
 
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import net.pilseong.demo.Observer;
-import net.pilseong.demo.OrderBoardManager;
+import net.pilseong.demo.OrderManager;
 import net.pilseong.demo.entity.Order;
 
 
-// @Component
+@Component
+@Profile("fifo")
 public class FIFOCourierManager implements CourierManager {
-  private final OrderBoardManager orderBoardManager;
+  private final OrderManager orderBoardManager;
+  
+  @Value("${order.time.minreach}")
+  private int minTimeToReachInSec;
+  
+  @Value("${order.time.maxreach}")
+  private int maxTimeToReachInSec;
 
-  public FIFOCourierManager(OrderBoardManager orderBoardManager) {
+  public FIFOCourierManager(OrderManager orderBoardManager) {
     this.orderBoardManager = orderBoardManager;
   }
 
   @Override
   public void update(Order order) {
-    System.out.println(String.format("%s says order %s has been received", 
-      "CourierManager", order.getName()));
+    System.out.println(String.format("%s SAYS order %s has been received", 
+      "[COURIER MANAGER]", order.getName()));
 
     // dispatching order to a courier
-    FIFOCourier courier = new FIFOCourier(this);
+    FIFOCourier courier = new FIFOCourier(this, 
+        minTimeToReachInSec, maxTimeToReachInSec);
     courier.start();
   }
 

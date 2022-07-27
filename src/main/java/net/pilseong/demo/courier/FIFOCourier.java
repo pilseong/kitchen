@@ -9,16 +9,26 @@ public class FIFOCourier extends Thread implements Observer, Courier {
 
   private Long waitTime;
   
-  public FIFOCourier(FIFOCourierManager courierManager) {
+  // can't inject from property directly. it's not managed bean
+  private int minTimeToReachInSec;
+  private int maxTimeToReachInSec;
+  
+  public FIFOCourier(FIFOCourierManager courierManager, 
+      int minTimeToReachInSec, int maxTimeToReachInSec) {
     this.courierManager = courierManager;
     this.order = null;
     this.waitTime = 0L;
+    
+    this.minTimeToReachInSec = minTimeToReachInSec;
+    this.maxTimeToReachInSec = maxTimeToReachInSec;
   }
 
   @Override
   public void run() {
-    // courier takes random number of seconds to get the kitchen (3 to 18 secs)
-    int second = (int) ((Math.random() * (18 - 3)) + 3) + 1;
+
+    // courier takes random number of seconds to get the kitchen (3 to 18 secs default)
+    int second = (int) ((Math.random() * 
+        (maxTimeToReachInSec - minTimeToReachInSec)) + minTimeToReachInSec) + 1;
 
     System.out.println(
       String.format("[COURIER %s] COURIER FETCHD AND TAKE %d secs", 

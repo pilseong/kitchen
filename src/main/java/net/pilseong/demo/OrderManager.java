@@ -11,8 +11,9 @@ import net.pilseong.demo.courier.Courier;
 import net.pilseong.demo.entity.Order;
 import net.pilseong.demo.kitchen.Kitchen;
 
+// manages order status like adding, removing, update orders and mapping orders to couriers
 @Component
-public class OrderBoardManager {
+public class OrderManager {
   private final Map<UUID, OrderStatus> orderBoard;
   private final List<OrderStatus> readyFoodQueue;
   
@@ -21,7 +22,7 @@ public class OrderBoardManager {
   private final List<Long> courierWaitingStat;
   private final List<Long> foodWaitingStat;
 
-  public OrderBoardManager(
+  public OrderManager(
     Map<UUID, OrderStatus> orderBoard,
     List<OrderStatus> readyFoodQueue,
     List<Long> courierWaitingStat,
@@ -47,6 +48,7 @@ public class OrderBoardManager {
     }
   }
   
+  // mapping functionalities
   public synchronized void setKitchen(Order order, Kitchen kitchen) {
     this.orderBoard.get(order.getId()).setKitchen(kitchen);  
   }
@@ -60,8 +62,18 @@ public class OrderBoardManager {
       new OrderStatus(order, false));
   }
   
+  // couier delete order status
+  public synchronized void deleteOrder(UUID uuid) {
+    Long foodWaitingTime = this.orderBoard.get(uuid).getKitchen().getWaitingTime();
+    Long courierWaitingTime = ((Courier)this.orderBoard.get(uuid).getCourier()).getWaitingTime();
 
-  // only used for FIFO strategy
+    this.foodWaitingStat.add(foodWaitingTime);
+    this.courierWaitingStat.add(courierWaitingTime);
+    this.orderBoard.remove(uuid);
+  }
+  
+
+  // only used for FIFO strategy. it allocate ready food to couriers
   public synchronized Order retrieveWaitingOrder(Observer courier) {
     
     // there is only one order ready to be delivered
@@ -84,17 +96,9 @@ public class OrderBoardManager {
       return null;
     }
   }
-  
-  // couier delette order status
-  public synchronized void deleteOrder(UUID uuid) {
-    Long foodWaitingTime = this.orderBoard.get(uuid).getKitchen().getWaitingTime();
-    Long courierWaitingTime = ((Courier)this.orderBoard.get(uuid).getCourier()).getWaitingTime();
 
-    this.foodWaitingStat.add(foodWaitingTime);
-    this.courierWaitingStat.add(courierWaitingTime);
-    this.orderBoard.remove(uuid);
-  }
-
+  // returns the size of pending orders. 
+  // only used by OrderDispatcher. so just for now it's not synchronuse mehtod
   public int size() {
     return this.orderBoard.size();
   }
