@@ -33,8 +33,8 @@ public class MatchedCourier extends Thread implements Observer, Courier {
   public void run() {
     
     //courier takes random number of seconds to get the kitchen (3 to 18 secs default)
-    int second = (int) ((Math.random() * 
-        (maxTimeToReachInSec - minTimeToReachInSec)) + minTimeToReachInSec) + 1;
+    int second = (int) (Math.random() * (maxTimeToReachInSec - (minTimeToReachInSec - 1))) 
+      + minTimeToReachInSec;
 
     System.out.println(
       String.format("[COURIER %s] COURIER FETCH %s TAKE %d secs", 
