@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import net.pilseong.demo.OrderManager;
 import net.pilseong.demo.entity.Order;
+import net.pilseong.demo.order.OrderManager;
 
 @Component
 @Profile("matched")
@@ -41,6 +41,7 @@ public class MatchedCourierManager implements CourierManager {
 
   @Override
   public void deleteOrder(UUID uuid) {
+    this.orderBoardManager.updateStats(uuid);
     this.orderBoardManager.deleteOrder(uuid);
   }
 }

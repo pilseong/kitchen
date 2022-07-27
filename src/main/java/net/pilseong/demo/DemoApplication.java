@@ -3,6 +3,7 @@ package net.pilseong.demo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import net.pilseong.demo.order.OrderDispatcher;
 import net.pilseong.demo.webserver.WebServer;
 
 @SpringBootApplication

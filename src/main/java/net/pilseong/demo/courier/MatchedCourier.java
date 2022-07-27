@@ -1,7 +1,7 @@
 package net.pilseong.demo.courier;
 
-import net.pilseong.demo.Observer;
 import net.pilseong.demo.entity.Order;
+import net.pilseong.demo.utils.Observer;
 
 public class MatchedCourier extends Thread implements Observer, Courier {
   private CourierManager courierManager;

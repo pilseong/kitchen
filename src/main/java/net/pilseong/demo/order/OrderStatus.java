@@ -1,9 +1,15 @@
-package net.pilseong.demo;
+package net.pilseong.demo.order;
 
 import net.pilseong.demo.courier.MatchedCourier;
 import net.pilseong.demo.entity.Order;
 import net.pilseong.demo.kitchen.Kitchen;
+import net.pilseong.demo.utils.Observer;
+import net.pilseong.demo.utils.Subject;
 
+// is datastructure for order management.
+// update and modification is done by OrderManager
+// every operation needs a lock but I had synchronised methods of Order manager 
+// it takes convenience for the sake of the performance.
 public class OrderStatus implements Subject{
   private Order order;
   private Observer courier;
@@ -22,8 +28,6 @@ public class OrderStatus implements Subject{
     this.order = order;
     this.finished = finished;
   }
-
-  
 
   public boolean isFinished() {
     return finished;

@@ -1,58 +1,84 @@
 package net.pilseong.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import net.pilseong.demo.courier.CourierManager;
 import net.pilseong.demo.entity.Order;
 import net.pilseong.demo.kitchen.KitchenManager;
+import net.pilseong.demo.order.OrderDispatcher;
+import net.pilseong.demo.order.OrderManager;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class OrderDispatcherTest {
-  
-  @MockBean
+
   private BlockingQueue<Order> incommingOrderQueue;
 
-  @MockBean
+  @Mock
   private CourierManager courierManager;
 
-  @MockBean
+  @Mock
   private KitchenManager kitchenManager;
 
-  @MockBean
-  private OrderManager orderBoardManager;
+  @Mock
+  private OrderManager orderManager;
 
-  @Autowired
-  OrderDispatcher orderDisOrderDispatcher;
+  @Captor
+  ArgumentCaptor<Order> orderCaptor;
+
+  OrderDispatcher orderDispatcher;
+
+  @BeforeEach
+  void setup() {
+    incommingOrderQueue = new LinkedBlockingQueue<>();
+
+
+    orderDispatcher = new OrderDispatcher(
+        incommingOrderQueue,
+        courierManager,
+        kitchenManager,
+        orderManager);
+  };
 
   @Test
   void testRun() throws InterruptedException {
 
-    when(incommingOrderQueue.take()).thenReturn(getOrder());
+    this.incommingOrderQueue.add(getOrder());
+    this.incommingOrderQueue.add(getOrder());
 
-    Thread thread = new Thread(this.orderDisOrderDispatcher);
+    Thread thread = new Thread(this.orderDispatcher);
     thread.setName("test");
     thread.start();
 
-    Thread.sleep(1000);
+    Thread.sleep(500);
+
     thread.interrupt();
 
-    assertThat(this.orderBoardManager.size()).isEqualTo(1);
+    System.out.println("TEst");
+
+    verify(courierManager, times(2)).update(any(Order.class));
+    verify(kitchenManager, times(2)).update(any(Order.class));
+
+    assertThat(incommingOrderQueue.size()).isEqualTo(0);
   }
 
   private Order getOrder() {
     return new Order
-    (UUID.fromString("a8cfcb76-7f24-4420-a5ba-d46dd77bdffd"), 
+    (UUID.fromString("a8cfcb76-7f24-4420-a5ba-d46dd77bdffd"),
     "Mosquito", 4L);
-
   }
-
 }

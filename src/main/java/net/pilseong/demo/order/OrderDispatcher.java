@@ -1,6 +1,5 @@
-package net.pilseong.demo;
+package net.pilseong.demo.order;
 
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -18,10 +17,6 @@ import net.pilseong.demo.kitchen.KitchenManager;
 @Component
 public class OrderDispatcher implements Runnable {
 
-  // accessing statictics
-  private final List<Long> courierWaitingStat;
-  private final List<Long> foodWaitingStat;
-
   // connecting to the managers and job queue from webserver
   private final BlockingQueue<Order> incommingOrderQueue;
   private final CourierManager courierManager;
@@ -34,18 +29,17 @@ public class OrderDispatcher implements Runnable {
 
   // Constructor Injection
   public OrderDispatcher(
-    List<Long> courierWaitingStat,
-    List<Long> foodWaitingStat,   
     BlockingQueue<Order> incommingOrderQueue,
     CourierManager courierManager,
     KitchenManager kitchenManager,
     OrderManager orderBoardManager) {
     
-      this.courierWaitingStat = courierWaitingStat;
-      this.foodWaitingStat = foodWaitingStat;    
+      // this.courierWaitingStat = courierWaitingStat;
+      // this.foodWaitingStat = foodWaitingStat;    
       this.incommingOrderQueue = incommingOrderQueue;
       this.courierManager = courierManager;
       this.kitchenManager = kitchenManager;
+
       this.orderBoardManager = orderBoardManager;
   }
   
@@ -74,41 +68,12 @@ public class OrderDispatcher implements Runnable {
           Thread.sleep(backpressure); 
         } else {
           // showing the stats so far
-          printStats();          
+          this.orderBoardManager.printStats();          
         }
 
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
     }
-  }
-
-  private void printStats() {
-    // below is for showing statistics
-    // after certain amount of time, it shows the stats
-    System.out.println("\n-----------------------------------------------------");
-    System.out.println("The Number of the PENDING orders  is " + this.orderBoardManager.size());
-    Long total = 0L;
-    int size = this.courierWaitingStat.size();
-    for (int i=0; i < this.courierWaitingStat.size(); i++) {
-      total += this.courierWaitingStat.get(i);
-    }
-    
-    // uncomment to see the time each thread consumed for waiting
-    // System.out.println(this.courierWaitingStat.toString());
-    System.out.println(String.format("\nThe average waiting time of couriers for %d orders is %f secs", 
-        size,  size == 0 ? 0 : total/size/1000.0));
-
-    total = 0L;
-    size = this.foodWaitingStat.size();
-    for (int i=0; i < this.foodWaitingStat.size(); i++) {
-      total += this.foodWaitingStat.get(i);
-    }
-    
-    // uncomment to see the time each thread consumed for waiting
-    // System.out.println(this.foodWaitingStat.toString());
-    System.out.println(String.format("The average waiting time of foods for %d orders is %f secs", 
-        size,  size == 0 ? 0 : total/size/1000.0));
-    System.out.println("\n");
   }
 }
