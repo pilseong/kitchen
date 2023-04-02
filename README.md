@@ -1,17 +1,25 @@
-# FOOD DELIVERY SIMULATION
+# FOOD DELIVERY SIMULATION (음식점 + 배달 시뮬레이션)
 
 FOOD DELIVERY SIMULATION is a simple springboot program for measureing efficiencies of various delivery stategies. This program only relis on spring-boot-starter from Springboot framework and Jackson library for JSON parsing.
+
+다양한 배달 전략의 효율성을 측정하는 단순한 스프링부트 프로그램이다. 스프링부트와 JSON 파싱 라이브러리만 의존한다.
+
 
 ## Build
 
 Open as a gradle project and build with gradle build and start with bootRun task. Using IDE is also good option.
+
+gradle 프로젝트로 gradle build 로 빌드한다.
+
 
 ```bash
 gradle build
 ```
 
 ## Execution
-Start with bootRun task. You can test with order.http REST client file or any rest clients making POST request with JSON array body.
+Start with bootRun task. You can test with order.http REST client file or any rest clients making POST request with JSON array body.  
+
+gradle bootRun으로 실행한다.
 
 ```bash
 gradle bootRun
@@ -19,6 +27,9 @@ gradle bootRun
 
 ## Configuration
 Set properties in application.properties file
+
+설정은 application.properties로 한다.
+
 
 ```properties
 
@@ -49,8 +60,11 @@ order.time.backpressure=500
 8. First-In, First-Out and Matched Strategies for Courier fetching are implemented by loosely coupled CourierManager interface. It is possible to apply Template Method Pattern to reduce the boilerplate codes inside two different Courier Thread classes, but I have chose simpler approach.
 9. order.http Rest Client file is included. If you use VS Code Rest client plugin, you can test it with this file.
 
+
 ## Author
-Pilseong Heo (heops79@gmail.com)
+Pilseong Heo (heops79@gmail.com)  
 
 ## License
 NO
+
+그런 거 없다
