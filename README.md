@@ -1,7 +1,7 @@
 # FOOD DELIVERY SIMULATION
 ## 음식점 + 배달 시뮬레이션
 
-FOOD DELIVERY SIMULATION is a simple springboot program for measureing efficiencies of various delivery stategies. This program only relis on spring-boot-starter from Springboot framework and Jackson library for JSON parsing.
+FOOD DELIVERY SIMULATION is a simple springboot program for measureing efficiencies of various delivery stategies. This program only relies on spring-boot-starter from Springboot framework and Jackson library for JSON parsing.
 
 다양한 배달 전략의 효율성을 측정하는 단순한 스프링부트 프로그램이다. 스프링부트와 JSON 파싱 라이브러리만 의존한다. 
 * 이 프로젝트 내에서는 아파치나 nginx같은 상용 웹서버를 사용하지 않는다. httpserver를 가지고 웹서버와 http handler, controller를 직접구현하였다.
